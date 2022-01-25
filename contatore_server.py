@@ -25,3 +25,4 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             else:
                 ris='Ricevuto "KO" dal server, chiudo la connessione con il client.'
             cs.sendall(ris.encode("UTF-8"))
+            print(ris)
