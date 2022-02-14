@@ -2,7 +2,7 @@ import socket
 import json
 
 HOST="127.0.0.1"
-PORT=65432
+PORT=22017
 
 def invia_comandi(sock_service):
     while True:
