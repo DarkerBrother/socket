@@ -46,7 +46,7 @@ def genera_richieste(num,address,port):
 if __name__ == '__main__':#inizio del main
     start_time=time.time()
     # 3 ciclo per chiamare NUM_WORKERS volte la funzione "genera" richieste alla quale passo i parametri (num,SERVER_ADDRESS, SERVER_PORT)
-    num = 1
+    num = 0
     while num <= NUM_WORKERS:
         genera_richieste(num,SERVER_ADDRESS,SERVER_PORT);
         num+=1
@@ -57,7 +57,7 @@ if __name__ == '__main__':#inizio del main
     threads=[]
     # 4 ciclo per chiamare NUM_WORKERS volte la funzione "genera_richieste" tramite l'avvio di un thread al quale passo i parametri args=(num,SERVER_ADDRESS, SERVER_PORT,)
     while num<=NUM_WORKERS:
-        thread = threading.Thread(target=genera_richieste(), args=(num,SERVER_ADDRESS,SERVER_PORT,))
+        thread = threading.Thread(target=genera_richieste(num,SERVER_ADDRESS,SERVER_PORT), args=(num,SERVER_ADDRESS,SERVER_PORT,))
     # ad ogni iterazione appendo il thread creato alla lista threads
         threads.append(thread)
         num+=1
@@ -72,9 +72,17 @@ if __name__ == '__main__':#inizio del main
 
     start_time=time.time()
     process=[]
+
+    num=0
     # 7 ciclo per chiamare NUM_WORKERS volte la funzione genera richieste tramite l'avvio di un processo al quale passo i parametri args=(num,SERVER_ADDRESS, SERVER_PORT,)
+    while num<=NUM_WORKERS:
+        processo = multiprocessing.Process(target=genera_richieste(num,SERVER_ADDRESS,SERVER_PORT), args=(num,SERVER_ADDRESS,SERVER_PORT,))
     # ad ogni iterazione appendo il thread creato alla lista threads
+        process.append(processo)
+        num+=1
     # 8 avvio tutti i processi
+    [p.start() for p in process]
     # 9 aspetto la fine di tutti i processi 
+    [p.join() for p in process]
     end_time=time.time()
     print("Total PROCESS time= ", end_time - start_time)
