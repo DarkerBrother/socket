@@ -45,13 +45,14 @@ def genera_richieste(num,address,port):#creazione metodo "genera_richieste"
 if __name__ == '__main__':#inizio del main
     start_time=time.time()#registrazione del tempo d'inizio
     # 3 ciclo per chiamare NUM_WORKERS volte la funzione "genera" richieste alla quale passo i parametri (num,SERVER_ADDRESS, SERVER_PORT)
-    num = 0#inizializzazione deell'indice
+    num = 0#inizializzazione dell'indice
     while num <= NUM_WORKERS:
         genera_richieste(num,SERVER_ADDRESS,SERVER_PORT);#richiamo del metodo per eseguire i calcoli con il main
         num+=1#incremento del contatore
     end_time=time.time()#registrazione del tempo di fine
     print("Total SERIAL time=", end_time - start_time)#visualizzo il tempo tascorso
     
+    num = 0
     start_time=time.time()#registro il tempo d'inizio
     threads=[]#creazione vettore dei threads
     # 4 ciclo per chiamare NUM_WORKERS volte la funzione "genera_richieste" tramite l'avvio di un thread al quale passo i parametri args=(num,SERVER_ADDRESS, SERVER_PORT,)
@@ -84,4 +85,4 @@ if __name__ == '__main__':#inizio del main
     # 9 aspetto la fine di tutti i processi 
     [p.join() for p in process]#metto in pausa il main
     end_time=time.time()#registro il tempo di fine
-    print("Total PROCESS time= ", end_time - start_time)#visualizzo i ltempo impiegato
+    print("Total PROCESS time= ", end_time - start_time)#visualizzo il tempo impiegato
