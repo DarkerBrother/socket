@@ -3,7 +3,7 @@
 import socket
 from threading import Thread
 import json
-
+import pprint
 
 SERVER_ADDRESS = '127.0.0.2'
 SERVER_PORT = 22226
@@ -80,18 +80,45 @@ def ricevi_comandi2(sock_service,addr_client):
 
 #Versione 3
 def ricevi_comandi3(sock_service,addr_client):
+
+    while True:
+        data=sock_service.recv(1024)
+        if not data:
+            break
+        data=data.decode()
+        data=json.loads(data)
   #....
   #1.recuperare dal json il tabellone
+        pp=pprint.PrettyPrinter(indent=4)
   #2. restituire per ogni studente la media dei voti e somma delle assenze :
-    pass
-
+        tabellone=[]
+        for stud in data:
+            pagella=data[stud]
+            assenze=0
+            media=0
+            for i,p in enumerate(pagella):
+                media+=int(p[1])
+                assenze+=int(p[2])
+            media=media/i
+            messaggio={'studenti':stud,
+            'media':media,
+            'assenze':assenze}
+            tabellone.append(messaggio)
+        print("Dati inviati al client:")
+        pp.pprint(tabellone)
+        messaggio=tabellone
+        messaggio=json.dumps(messaggio)
+        sock_service.sendall(messaggio.encode("UTF-8"))
+    sock_service.close()
 def ricevi_connessioni(sock_listen):
     while True:
         sock_service, addr_client = sock_listen.accept()
         print("\nConnessione ricevuta da " + str(addr_client))
         print("\nCreo un thread per servire le richieste ")
         try:
-            Thread(target=ricevi_comandi2,args=(sock_service,addr_client)).start()
+            Thread(target=ricevi_comandi1,args=(sock_service,addr_client)).start()
+            #Thread(target=ricevi_comandi2,args=(sock_service,addr_client)).start()
+            #Thread(target=ricevi_comandi3,args=(sock_service,addr_client)).start()
         except:
             print("il thread non si avvia")
             sock_listen.close()
